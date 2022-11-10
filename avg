@@ -1,0 +1,13 @@
+def avg1(lst):
+    s = 0
+    n = 0
+    for i in lst:
+        s += i
+        n += 1
+    return s/n
+
+x = [1, 7, 12, 17, 22, 26]
+
+avgx = avg1(x)
+print(avgx)
+

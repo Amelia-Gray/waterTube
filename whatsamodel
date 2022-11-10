@@ -1,0 +1,16 @@
+a representation of the real world
+requires some data about the real world
+
+analytical model: equation or function that represents data
+
+h(t) = 2t + 7
+input: t
+output: h
+
+physical models: smaller scale physical representation 
+problems w scaling tho
+
+numerical models
+lot o calcs so usually computer models
+usually break the system into smaller parts that interact with each other
+computer is used to keep track of interactions

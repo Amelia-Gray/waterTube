@@ -1,0 +1,40 @@
+import numpy as np
+import time
+from ezGraph2 import *
+
+#Finite difference model
+
+#parameters
+dt = 1.
+nsteps = 50
+
+r = 2.25    #radius in cm
+q = 0       #volume inflow rate cm/sec
+h = 50       #initial height in cm
+k = 5.0       #outflow rate constant
+
+#graph
+graph = ezGraph(xLabel= "Time(s)", yLabel= "Height(cm)")
+#, xlabel="time", ylabel="height"
+
+
+#time loop
+for t in range(nsteps): 
+    modeltime = t * dt
+    #filling
+    dh = q * dt / (np.pi * r ** 2)          #find the change in height
+    h = h + dh                  #update height
+    #draining
+    dvdt = -k * h
+    dh = dvdt * dt / (np.pi * r ** 2)
+    h += dh
+
+    print(modeltime,h)
+    graph.add(modeltime,h)
+    graph.wait(.1)
+    
+
+
+# DRAW GRAPH
+graph.keepOpen()   
+ # keep graph open when done

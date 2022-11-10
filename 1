@@ -1,0 +1,29 @@
+import numpy as np
+import time
+from ezGraph2 import *
+
+#GRAPH THE FUNCTION f(x) = x**0.5
+
+#parameters
+dt = 0.5
+nsteps = 50
+
+# linear model
+m = 2
+b = -3.22
+
+#graph
+graph = ezGraph(xmax=40)
+
+#time loop
+for t in range(nsteps):
+    modeltime = t * dt
+    h = m * modeltime + b
+    print(modeltime,h)
+    graph.add(modeltime,h)
+    graph.wait(0.1)
+
+
+# DRAW GRAPH
+graph.keepOpen()   
+ # keep graph open when done
