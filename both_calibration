@@ -15,13 +15,14 @@ def avg1(lst):
 #Finite difference model
 
 #parameters
-dt = 1.
-nsteps = 30
+dt = 1
+nsteps = 100
 
 r = 2.25    #radius in cm
-q = 30       #volume inflow rate cm/sec
+q = 0      #volume inflow rate cm/sec
 h = 0       #initial height in cm
-k = 0.0       #outflow rate constant
+k = 4       #outflow rate constant
+#dq = -0.1    #change in inflow rate
 
 # expiremental data (filling)
 #x_measured = [1, 7, 12, 17, 22, 26]
@@ -29,19 +30,28 @@ k = 0.0       #outflow rate constant
 #y_modeled = []
 
 #expiremental data (draining)
-x_measured = [1, 7, 12, 17, 22, 26]
-y_measured = [0, 10, 20, 30, 40, 50]
-y_modeled = []
+#x_measured = [1, 7, 12, 17, 22, 26]
+#y_measured = [0, 10, 20, 30, 40, 50]
+#y_modeled = []
+
 
 
 #graph
-graph = ezGraphMM(xmax=100, xmin=0, ymin=0, ymax=10, xLabel= "Time (s)", yLabel= "Height (cm)", x_measured = x_measured, y_measured = y_measured)
-graph.addModeled(0,h)       #add initial values
+graph = ezGraphMM(xmax=100, xmin=0, ymin=0, ymax=30, xLabel= "Time (s)", yLabel= "Height (cm)")
+#graph.addModeled(0,h)       #add initial values
+
+
 
 
 #time loop
 for t in range(1,nsteps): 
     modeltime = t * dt
+    #q = 10 * np.sin(5*t) + 11       #volume inflow rate cm/sec
+    
+    if (t <=5) or (t<=15 and t>=10) or (t<=25 and t>=20) or (t<=35 and t>=30):
+        q = 10
+    else:
+        q = 0
 
     #filling
     dh = q * dt / (np.pi * r ** 2)          #find the change in height
@@ -49,25 +59,31 @@ for t in range(1,nsteps):
                      #update height
     #draining
     dvdt = -k * h
-    dh = dvdt * dt
+    dh = dt / (np.pi * r ** 2) * dvdt 
     h += dh
+    
+    graph.addModeled(modeltime,h)
+        #graph.wait(.1)
+    
+    #find max
+    #if (graph.y[-2] > graph.y[-1]) and (graph.y[-2] > graph.y[-3]):
+        #print(graph.y[-2])
+    
+    #find min
+    #if (graph.y[-2] < graph.y[-1]) and (graph.y[-2] < graph.y[-3]):
+        #print(graph.y[-2])
 
-    if (modeltime in x_measured):
-        print(modeltime,h) 
-        y_modeled.append(h)              #(modeltime,h)
-        graph.addModeled(modeltime,h)
-        graph.wait(.1)
+print(modeltime,h)
 
-
-print("h measured:", y_measured)
-print("h modeled:", y_modeled)
+#print("h measured:", y_measured)
+#print("h modeled:", y_modeled)
 
 #calculate average values for y_measured and y_modeled
-avgy = avg1(y_measured)
-avgym = avg1(y_modeled)
+#avgy = avg1(y_measured)
+#avgym = avg1(y_modeled)
 
-print("average h measured:",avgy)
-print("average h modeled:" , avgym)
+#print("average h measured:",avgy)
+#print("average h modeled:" , avgym)
 
 def residual(lst1,lst2):
     n = len(lst1)
@@ -86,10 +102,10 @@ def residualsq(lst1,lst2):
         print(i, lst1[i], lst2[i], d, s)
     return s
 
-ressq = residualsq(y_measured,y_modeled)
-print(ressq)
+#ressq = residualsq(y_measured,y_modeled)
+#print(ressq)
 
-def dsq(lst1):
+#def dsq(lst1):
     n = len(lst1)
     s = 0
     for i in range(n):
@@ -98,9 +114,10 @@ def dsq(lst1):
     return s
 
 
-r2 = 1 - (ressq / dsq(y_measured))
 
-print(r2)
+#r2 = 1 - (ressq / dsq(y_measured))
+
+#print(r2)
 
 # draw graph
 graph.keepOpen()
